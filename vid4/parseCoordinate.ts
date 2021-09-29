@@ -28,7 +28,7 @@ function parseCoordinate(arg1: unknown, arg2?: unknown): Coordinate {
     } else if (typeof arg1 === "string") {
         (arg1 as string).split(",").forEach((str) => {
             const [key, value] = str.split(":");
-            coord[key as "x" | "y"] = parseInt(value, 10);
+            coord[key as keyof Coordinate] = parseInt(value, 10);
         });
     } else {
         coord = { x: arg1 as number, y: arg2 as number };
