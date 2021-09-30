@@ -1,3 +1,6 @@
+// ----------------------------------------------------------------------
+// type decs
+
 interface Database {
     get(id: string): string;
     set(id: string, value: string): void;
@@ -7,6 +10,9 @@ interface Persistable {
     saveToString(): string;
     restoreFromString(storedString: string): void;
 }
+
+// ----------------------------------------------------------------------
+// setup in memory db
 
 class InMemoryDatabase implements Database {
     // private makes it only available to this class
@@ -22,10 +28,16 @@ class InMemoryDatabase implements Database {
     }
 }
 
+// ----------------------------------------------------------------------
+// create instance and test
+
 const myDB: InMemoryDatabase = new InMemoryDatabase();
 myDB.set("foo", "bar");
 // myDB.db["foo"] =  "baz";
 console.log("Intial get: ", myDB.get("foo"));
+
+// ----------------------------------------------------------------------
+// setup persistant memory db
 
 class PersistentMemoryDB extends InMemoryDatabase implements Persistable {
     saveToString(): string {
@@ -36,6 +48,9 @@ class PersistentMemoryDB extends InMemoryDatabase implements Persistable {
         this.db = JSON.parse(storedState);
     }
 }
+
+// ----------------------------------------------------------------------
+// create instances and test
 
 const myNewDB: PersistentMemoryDB = new PersistentMemoryDB();
 myNewDB.set("foo", "bar");
