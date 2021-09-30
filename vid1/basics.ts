@@ -1,5 +1,5 @@
 // ------------------------------------
-// Intro
+// Intro - basic types
 
 // throws error in js, not ts
 // let userName = "Pete";
@@ -10,6 +10,8 @@
 // console.log(hasLoggedIn);
 
 // ts
+
+// basic types, will be typechecked
 let userName: string = "Pete";
 let hasLoggedIn: boolean = true;
 
@@ -24,6 +26,7 @@ const myRegex: RegExp = /foo/;
 const names: string[] = userName.split(" ");
 const myValues: Array<number | RegExp> = [1, 3, 4, /Pete/];
 
+// objects
 interface Person {
     first: string;
     last: string;
@@ -34,6 +37,7 @@ const myPerson: Person = {
     last: "Drysdale",
 };
 
+// note that Record is a utility type (see later content)
 const ids: Record<number, string> = {
     10: "a",
     20: "b",

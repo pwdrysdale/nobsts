@@ -1,3 +1,6 @@
+// ----------------------------------------------------------------------------------------
+// example 1: just passing in a callback
+
 export function printToFile(text: string, callback: () => void): void {
     console.log(text);
     callback();
@@ -16,6 +19,9 @@ const myNewMutationFunction: MutationFunction = (v: number): number => v * v;
 
 console.log(arrayMutate([2, 34, 45], (v) => v * 10));
 console.log(arrayMutate([2, 34, 45], myNewMutationFunction));
+
+// ----------------------------------------------------------------------------------------
+// example 2: returning a function
 
 export type AdderFunction = (v: number) => number;
 
