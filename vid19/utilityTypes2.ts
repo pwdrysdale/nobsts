@@ -1,3 +1,8 @@
+// TS documenttation: https://www.typescriptlang.org/docs/handbook/utility-types.html
+
+// Parameters: pull the parameters off of a function
+// Returntype: pulls the return type off a function
+
 type Name = {
     first: string;
     last: string;
@@ -20,6 +25,9 @@ console.log(
         { first: "Tiffany", last: "Drysdale" },
     ])
 );
+
+// ConstructorParameters: pulls the constructor parameters out (classes)
+// InstanceType: returns what the class is an isntance of
 
 class PersonWithFullName {
     constructor(public name: Name) {}
