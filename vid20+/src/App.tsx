@@ -1,7 +1,7 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
 
-import { useTodos } from "./useTodos";
+import { ToDo, useTodos } from "./useTodos";
 import "./App.css";
 
 const Heading = ({ title }: { title: string }) => {
@@ -51,6 +51,29 @@ const Button: React.FunctionComponent<
     </button>
 );
 
+function UL<T>({
+    items,
+    render,
+    itemClick,
+}: React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLUListElement>,
+    HTMLUListElement
+> & {
+    items: T[];
+    render: (item: T) => React.ReactNode;
+    itemClick: (item: T) => void;
+}) {
+    return (
+        <ul>
+            {items.map((item, index) => (
+                <li key={index} onClick={() => itemClick(item)}>
+                    {render(item)}
+                </li>
+            ))}
+        </ul>
+    );
+}
+
 function App() {
     const { addToDo, removeToDo, todos } = useTodos([
         { id: uuid(), text: "This is a sample todo", done: false },
@@ -75,12 +98,21 @@ function App() {
 
             <Incrementer value={value} setValue={setValue} />
             <Heading title="To Do's" />
-            {todos.map((todo) => (
-                <div key={todo.id}>
-                    {todo.text}
-                    <Button onClick={() => removeToDo(todo.id)}>Remove</Button>
-                </div>
-            ))}
+            <UL
+                items={todos}
+                itemClick={(item: ToDo): void => {
+                    alert(item.id);
+                }}
+                render={(item: ToDo): React.ReactNode => (
+                    <div>
+                        {item.text}
+                        <Button onClick={() => removeToDo(item.id)}>
+                            Remove
+                        </Button>
+                    </div>
+                )}
+            />
+
             <div>
                 <input type="text" ref={newToDoRef} />
                 <Button onClick={onAddToDo}>Add To Do</Button>

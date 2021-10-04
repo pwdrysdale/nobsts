@@ -1,7 +1,7 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
 
-interface ToDo {
+export interface ToDo {
     id: string;
     done: boolean;
     text: string;
