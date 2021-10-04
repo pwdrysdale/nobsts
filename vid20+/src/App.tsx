@@ -1,13 +1,14 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
 
-import {
-    TodosProvider,
-    useTodos,
-    useAddTodos,
-    useRemoveTodo,
-    ToDo,
-} from "./useTodos";
+// import {
+//     TodosProvider,
+//     useTodos,
+//     useAddTodos,
+//     useRemoveTodo,
+//     ToDo,
+// } from "./useTodos";
+import { ToDo, useToDos } from "./useToDosReactUse";
 import "./App.css";
 
 const Heading = ({ title }: { title: string }) => {
@@ -80,12 +81,28 @@ function UL<T>({
     );
 }
 
+// vid 26
+const initialTodos: ToDo[] = [
+    { text: "This is a sample", done: false, id: uuid() },
+];
+
 function App() {
-    const todos = useTodos();
-    const addToDo = useAddTodos();
-    const removeTodo = useRemoveTodo();
+    // vid 25
+    // const todos = useTodos();
+    // const addToDo = useAddTodos();
+    // const removeTodo = useRemoveTodo();
 
     const newToDoRef = React.useRef<HTMLInputElement>(null);
+
+    // const onAddToDo = React.useCallback(() => {
+    //     if (newToDoRef.current) {
+    //         addToDo(newToDoRef.current.value);
+    //         newToDoRef.current.value = "";
+    //     }
+    // }, [addToDo]);
+
+    // vid 26
+    const { todos, addToDo, removeToDo } = useToDos(initialTodos);
 
     const onAddToDo = React.useCallback(() => {
         if (newToDoRef.current) {
@@ -111,7 +128,7 @@ function App() {
                 render={(item: ToDo): React.ReactNode => (
                     <div>
                         {item.text}
-                        <Button onClick={() => removeTodo(item.id)}>
+                        <Button onClick={() => removeToDo(item.id)}>
                             Remove
                         </Button>
                     </div>
@@ -127,7 +144,12 @@ function App() {
 }
 
 const JustToDos = () => {
-    const todos = useTodos();
+    // vid 25
+    //const todos = useTodos();
+
+    // vid26
+    const { todos } = useToDos(initialTodos);
+
     return (
         <UL
             items={todos}
@@ -139,16 +161,16 @@ const JustToDos = () => {
 
 const AppWrapper = () => {
     return (
-        <TodosProvider
-            initialTodos={[
-                { id: uuid(), text: "This is a sample todo", done: false },
-            ]}
-        >
-            <div style={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
-                <App />
-                <JustToDos />
-            </div>
-        </TodosProvider>
+        // <TodosProvider
+        //     initialTodos={[
+        //         { id: uuid(), text: "This is a sample todo", done: false },
+        //     ]}
+        // >
+        <div style={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
+            <App />
+            <JustToDos />
+        </div>
+        // </TodosProvider>
     );
 };
 

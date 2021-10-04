@@ -13,11 +13,12 @@ type ActionType =
 
 type UseTodosManagerResult = ReturnType<typeof useTodosManager>;
 
-const TodoContext = React.createContext<UseTodosManagerResult>({
-    todos: [],
-    addToDo: () => {},
-    removeToDo: () => {},
-});
+const TodoContext: React.Context<UseTodosManagerResult> =
+    React.createContext<UseTodosManagerResult>({
+        todos: [],
+        addToDo: (): void => {},
+        removeToDo: (): void => {},
+    });
 
 function useTodosManager(initialTodos: ToDo[]): {
     todos: ToDo[];
@@ -33,7 +34,9 @@ function useTodosManager(initialTodos: ToDo[]): {
                         { id: uuid(), text: action.text, done: false },
                     ];
                 case "REMOVE":
-                    return state.filter((t: ToDo) => t.id !== action.id);
+                    return state.filter(
+                        (t: ToDo): boolean => t.id !== action.id
+                    );
                 default:
                     return state;
             }
@@ -41,13 +44,13 @@ function useTodosManager(initialTodos: ToDo[]): {
         initialTodos
     );
 
-    const addToDo = React.useCallback(
-        (text: string) => dispatch({ type: "ADD", text }),
+    const addToDo: (text: string) => void = React.useCallback(
+        (text: string): void => dispatch({ type: "ADD", text }),
         []
     );
 
-    const removeToDo = React.useCallback(
-        (id: string) => dispatch({ type: "REMOVE", id }),
+    const removeToDo: (id: string) => void = React.useCallback(
+        (id: string): void => dispatch({ type: "REMOVE", id }),
         []
     );
 
@@ -61,17 +64,19 @@ export const TodosProvider: React.FunctionComponent<{ initialTodos: ToDo[] }> =
         </TodoContext.Provider>
     );
 
-export const useTodos = (): ToDo[] => {
-    const ctx = React.useContext(TodoContext);
+export const useTodos: () => ToDo[] = (): ToDo[] => {
+    const ctx: UseTodosManagerResult = React.useContext(TodoContext);
     return ctx.todos;
 };
 
-export const useAddTodos = (): UseTodosManagerResult["addToDo"] => {
-    const ctx = React.useContext(TodoContext);
-    return ctx.addToDo;
-};
+export const useAddTodos: () => (text: string) => void =
+    (): UseTodosManagerResult["addToDo"] => {
+        const ctx: UseTodosManagerResult = React.useContext(TodoContext);
+        return ctx.addToDo;
+    };
 
-export const useRemoveTodo = (): UseTodosManagerResult["removeToDo"] => {
-    const ctx = React.useContext(TodoContext);
-    return ctx.removeToDo;
-};
+export const useRemoveTodo: () => (id: string) => void =
+    (): UseTodosManagerResult["removeToDo"] => {
+        const ctx: UseTodosManagerResult = React.useContext(TodoContext);
+        return ctx.removeToDo;
+    };
