@@ -1,7 +1,13 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
 
-import { ToDo, useTodos } from "./useTodos";
+import {
+    TodosProvider,
+    useTodos,
+    useAddTodos,
+    useRemoveTodo,
+    ToDo,
+} from "./useTodos";
 import "./App.css";
 
 const Heading = ({ title }: { title: string }) => {
@@ -75,9 +81,9 @@ function UL<T>({
 }
 
 function App() {
-    const { addToDo, removeToDo, todos } = useTodos([
-        { id: uuid(), text: "This is a sample todo", done: false },
-    ]);
+    const todos = useTodos();
+    const addToDo = useAddTodos();
+    const removeTodo = useRemoveTodo();
 
     const newToDoRef = React.useRef<HTMLInputElement>(null);
 
@@ -88,7 +94,6 @@ function App() {
         }
     }, [addToDo]);
 
-    // vid 22
     const [value, setValue] = useNumber(0);
 
     return (
@@ -106,7 +111,7 @@ function App() {
                 render={(item: ToDo): React.ReactNode => (
                     <div>
                         {item.text}
-                        <Button onClick={() => removeToDo(item.id)}>
+                        <Button onClick={() => removeTodo(item.id)}>
                             Remove
                         </Button>
                     </div>
@@ -121,4 +126,30 @@ function App() {
     );
 }
 
-export default App;
+const JustToDos = () => {
+    const todos = useTodos();
+    return (
+        <UL
+            items={todos}
+            itemClick={(): void => {}}
+            render={(item: ToDo): React.ReactNode => <div>{item.text}</div>}
+        />
+    );
+};
+
+const AppWrapper = () => {
+    return (
+        <TodosProvider
+            initialTodos={[
+                { id: uuid(), text: "This is a sample todo", done: false },
+            ]}
+        >
+            <div style={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
+                <App />
+                <JustToDos />
+            </div>
+        </TodosProvider>
+    );
+};
+
+export default AppWrapper;

@@ -11,7 +11,15 @@ type ActionType =
     | { type: "ADD"; text: string }
     | { type: "REMOVE"; id: string };
 
-export function useTodos(initialTodos: ToDo[]): {
+type UseTodosManagerResult = ReturnType<typeof useTodosManager>;
+
+const TodoContext = React.createContext<UseTodosManagerResult>({
+    todos: [],
+    addToDo: () => {},
+    removeToDo: () => {},
+});
+
+function useTodosManager(initialTodos: ToDo[]): {
     todos: ToDo[];
     addToDo: (text: string) => void;
     removeToDo: (id: string) => void;
@@ -45,3 +53,25 @@ export function useTodos(initialTodos: ToDo[]): {
 
     return { todos, addToDo, removeToDo };
 }
+
+export const TodosProvider: React.FunctionComponent<{ initialTodos: ToDo[] }> =
+    ({ initialTodos, children }) => (
+        <TodoContext.Provider value={useTodosManager(initialTodos)}>
+            {children}
+        </TodoContext.Provider>
+    );
+
+export const useTodos = (): ToDo[] => {
+    const ctx = React.useContext(TodoContext);
+    return ctx.todos;
+};
+
+export const useAddTodos = (): UseTodosManagerResult["addToDo"] => {
+    const ctx = React.useContext(TodoContext);
+    return ctx.addToDo;
+};
+
+export const useRemoveTodo = (): UseTodosManagerResult["removeToDo"] => {
+    const ctx = React.useContext(TodoContext);
+    return ctx.removeToDo;
+};
