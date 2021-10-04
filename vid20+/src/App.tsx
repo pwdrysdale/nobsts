@@ -41,7 +41,48 @@ type ActionType =
     | { type: "ADD"; text: string }
     | { type: "REMOVE"; id: string };
 
+const useNumber = (initialValue: number) =>
+    React.useState<number>(initialValue);
+
+type UserNumberValue = ReturnType<typeof useNumber>[0];
+type UserNumberSetValue = ReturnType<typeof useNumber>[1];
+
+const Incrementer: React.FunctionComponent<{
+    value: UserNumberValue;
+    setValue: UserNumberSetValue;
+}> = ({ value, setValue }) => {
+    return (
+        <Button
+            onClick={() => setValue(value + 1)}
+            title={`Add - ${value}`}
+        ></Button>
+    );
+};
+
+const Button: React.FunctionComponent<
+    React.DetailedHTMLProps<
+        React.ButtonHTMLAttributes<HTMLButtonElement>,
+        HTMLButtonElement
+    > & { title?: string }
+> = ({ title, children, style, ...rest }) => (
+    <button
+        {...rest}
+        style={{
+            ...style,
+            backgroundColor: "blue",
+            color: "white",
+            fontSize: "large",
+        }}
+    >
+        {title ?? children}
+    </button>
+);
+
 function App() {
+    // vid 20
+    const onListClick = React.useCallback((item: string) => alert(item), []);
+
+    // vid 21
     const [payload, setPayload] = React.useState<null | PayloadType>(null);
 
     React.useEffect(() => {
@@ -79,7 +120,8 @@ function App() {
         }
     }, []);
 
-    const onListClick = React.useCallback((item: string) => alert(item), []);
+    // vid 22
+    const [value, setValue] = useNumber(0);
 
     return (
         <div>
@@ -90,22 +132,23 @@ function App() {
                 onClick={(item: string) => onListClick(item)}
             />
             <Box>{JSON.stringify(payload)}</Box>
+            <Incrementer value={value} setValue={setValue} />
             <Heading title="To Do's" />
             {todos.map((todo) => (
                 <div key={todo.id}>
                     {todo.text}
-                    <button
+                    <Button
                         onClick={() =>
                             dispatch({ type: "REMOVE", id: todo.id })
                         }
                     >
                         Remove
-                    </button>
+                    </Button>
                 </div>
             ))}
             <div>
                 <input type="text" ref={newToDoRef} />
-                <button onClick={onAddToDo}>Add To Do</button>
+                <Button onClick={onAddToDo}>Add To Do</Button>
             </div>
         </div>
     );
