@@ -1,7 +1,7 @@
 import React from "react";
-import { v4 as uuid } from "uuid";
+// import { v4 as uuid } from "uuid";
 
-import { ToDo, useTodos } from "./useTodos";
+import useTodos, { ToDo } from "./useTodos";
 import "./App.css";
 
 const Heading = ({ title }: { title: string }) => {
@@ -75,9 +75,7 @@ function UL<T>({
 }
 
 function App() {
-    const { addToDo, removeToDo, todos } = useTodos([
-        { id: uuid(), text: "This is a sample todo", done: false },
-    ]);
+    const { addToDo, removeToDo, todos } = useTodos((state) => state);
 
     const newToDoRef = React.useRef<HTMLInputElement>(null);
 
@@ -121,4 +119,23 @@ function App() {
     );
 }
 
-export default App;
+const JustTheTodos = () => {
+    const todos = useTodos((state) => state.todos);
+
+    return (
+        <UL
+            items={todos}
+            render={(item) => <>{item.text}</>}
+            itemClick={({ id }) => console.log(`You clicked on ${id}`)}
+        />
+    );
+};
+
+const AppWrapper = () => (
+    <div style={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
+        <App />
+        <JustTheTodos />
+    </div>
+);
+
+export default AppWrapper;
