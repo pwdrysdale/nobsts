@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { v4 as uuid } from "uuid";
 
 import { ToDo, useTodos } from "./useTodos";
@@ -75,9 +75,13 @@ function UL<T>({
 }
 
 function App() {
-    const { addToDo, removeToDo, todos } = useTodos([
-        { id: uuid(), text: "This is a sample todo", done: false },
-    ]);
+    const initialTodos = useMemo(
+        () => [{ id: uuid(), text: "This is a sample todo", done: false }],
+        []
+    );
+
+    const { isEditing, addToDo, removeToDo, todos, startWorking, endWorking } =
+        useTodos(initialTodos);
 
     const newToDoRef = React.useRef<HTMLInputElement>(null);
 
@@ -98,25 +102,32 @@ function App() {
 
             <Incrementer value={value} setValue={setValue} />
             <Heading title="To Do's" />
-            <UL
-                items={todos}
-                itemClick={(item: ToDo): void => {
-                    alert(item.id);
-                }}
-                render={(item: ToDo): React.ReactNode => (
+            {isEditing ? (
+                <>
+                    <UL
+                        items={todos}
+                        itemClick={(item: ToDo): void => {
+                            console.log(item.id);
+                        }}
+                        render={(item: ToDo): React.ReactNode => (
+                            <div>
+                                ({item.done ? "Done" : "Not Done"}) -{" "}
+                                {item.text}
+                                <Button onClick={() => removeToDo(item.id)}>
+                                    Remove
+                                </Button>
+                            </div>
+                        )}
+                    />
                     <div>
-                        {item.text}
-                        <Button onClick={() => removeToDo(item.id)}>
-                            Remove
-                        </Button>
+                        <input type="text" ref={newToDoRef} />
+                        <Button onClick={onAddToDo}>Add To Do</Button>
+                        <Button onClick={startWorking}>Start Working</Button>
                     </div>
-                )}
-            />
-
-            <div>
-                <input type="text" ref={newToDoRef} />
-                <Button onClick={onAddToDo}>Add To Do</Button>
-            </div>
+                </>
+            ) : (
+                <Button onClick={endWorking}>Stop Working</Button>
+            )}
         </div>
     );
 }
