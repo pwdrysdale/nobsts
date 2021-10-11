@@ -1,3 +1,7 @@
 /node_modules
 
 /vid20/node_modules
+
+/vid30/mylib/node_modules
+/vid30/js-consumer/node_modules
+/vid30/ts-consumer/node_modules

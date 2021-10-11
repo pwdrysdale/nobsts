@@ -1,0 +1,17 @@
+{
+    "name": "mylib",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch"
+    },
+    "keywords": [],
+    "types": "./dist/index.d.ts",
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "typescript": "^4.4.3"
+    }
+}
